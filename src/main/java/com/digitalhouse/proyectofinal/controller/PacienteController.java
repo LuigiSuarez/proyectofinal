@@ -15,15 +15,19 @@ public class PacienteController {
         this.pacienteService = pacienteService;
     }
 
-
     @PostMapping("/guardar")
     public Paciente guardarPaciente(@RequestBody Paciente paciente){
         return pacienteService.guardarPaciente(paciente);
     }
 
-
     @GetMapping("/buscartodos")
     public List<Paciente> listarTodos(){
         return pacienteService.buscarTodos();
+    }
+
+    @PutMapping("/modificar")
+    public String modificarPaciente(@RequestBody Paciente paciente){
+        pacienteService.modificarPaciente(paciente);
+        return "el paciente "+ paciente.getId() + " fue modificado";
     }
 }
