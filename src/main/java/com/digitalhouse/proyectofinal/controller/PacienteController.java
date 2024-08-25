@@ -21,9 +21,14 @@ public class PacienteController {
         return pacienteService.guardarPaciente(paciente);
     }
 
-
     @GetMapping("/buscartodos")
     public List<Paciente> listarTodos(){
         return pacienteService.buscarTodos();
+    }
+
+    @DeleteMapping("/borrar/{id}")
+    public String borrarPaciente(@PathVariable Integer id){
+        pacienteService.borrarPaciente(id);
+        return "Paciente con ID " + id + " fue eliminado exitosamente.";
     }
 }

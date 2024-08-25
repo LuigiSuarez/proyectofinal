@@ -18,6 +18,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 class PacienteServiceTest {
     static final Logger logger = LoggerFactory.getLogger(PacienteServiceTest.class);
@@ -71,6 +73,22 @@ class PacienteServiceTest {
         pacientes = pacienteService.buscarTodos();
         // entonces
         assertFalse(pacientes.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Borar un paciente")
+    void testBorrarUnPaciente(){
+
+        Paciente paciente = new Paciente("Gonzalez", "Juan", "12345678", LocalDate.of(2024, 8, 20),
+                new Domicilio("Falsa", 123, "CABA", "Buenos Aires"));
+        Paciente pacienteGuardado = pacienteService.guardarPaciente(paciente);
+        Integer id = pacienteGuardado.getId();
+
+        pacienteService.borrarPaciente(id);
+
+        Paciente pacienteEliminado = pacienteService.buscarPorId(id);
+        assertNull(pacienteEliminado, "El paciente debería haber sido eliminado");
+
     }
 
 }
