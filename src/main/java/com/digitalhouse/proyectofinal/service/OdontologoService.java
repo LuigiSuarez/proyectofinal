@@ -21,4 +21,7 @@ public class OdontologoService {
         return OdontologoIDao.listaTodos();
     }
 
+    public void modificarOdontologo(OdontologoModel odontologo){OdontologoIDao.modificar(odontologo);
+    }
+
 }

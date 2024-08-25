@@ -16,6 +16,7 @@ public class DaoH2Odontologo implements IDao<OdontologoModel> {
     public static final Logger logger = LoggerFactory.getLogger(DaoH2Odontologo.class);
     public static final String INSERT = "INSERT INTO ODONTOLOGOS VALUES(DEFAULT,?,?,? )";
     public static final String SELECT_ALL = "SELECT * FROM ODONTOLOGOS";
+    public static final String UPDATE = "UPDATE ODONTOLOGOS SET APELLIDO=?, NOMBRE=?, NOMATRICULA=? WHERE ID=?";
 
 
     @Override
@@ -126,6 +127,43 @@ public class DaoH2Odontologo implements IDao<OdontologoModel> {
 
     @Override
     public void modificar(OdontologoModel odontologoModel) {
+        Connection connection = null;
+        try{
+            connection = H2Connection.getConnection();
+            connection.setAutoCommit(false);
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE);
+            preparedStatement.setString(1, odontologoModel.getApellido());
+            preparedStatement.setString(2, odontologoModel.getNombre());
+            preparedStatement.setInt(3, odontologoModel.getNoMatricula());
+            preparedStatement.setInt(4, odontologoModel.getId());
+            preparedStatement.executeUpdate();
+            connection.commit();
+            logger.info("El odontologo ha sido actualizado exitosamente"+ odontologoModel);
+
+        }catch (Exception e){
+            if(connection != null){
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    logger.error(e.getMessage());
+                } finally {
+                    try {
+                        connection.setAutoCommit(true);
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            }
+            logger.error(e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                e.printStackTrace();
+            }
+        }
 
     }
 
