@@ -24,6 +24,9 @@ public class PacienteService {
     public List<Paciente> buscarTodos(){
         return pacienteIDao.listaTodos();
     }
+    public void modificarPaciente(Paciente paciente){
+        pacienteIDao.modificar(paciente);
+    }
 
     public void borrarPaciente(Integer id){pacienteIDao.borrar(id);}
 }
