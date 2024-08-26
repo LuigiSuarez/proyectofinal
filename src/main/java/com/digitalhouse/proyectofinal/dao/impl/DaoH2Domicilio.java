@@ -148,4 +148,9 @@ public class DaoH2Domicilio implements IDao<Domicilio> {
             }
         }
     }
+
+    @Override
+    public void eliminar(Integer id) {
+
+    }
 }

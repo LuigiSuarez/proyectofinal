@@ -196,4 +196,9 @@ public class DaoH2Paciente implements IDao<Paciente> {
             }
         }
     }
+
+    @Override
+    public void eliminar(Integer id) {
+
+    }
 }
