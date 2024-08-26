@@ -7,7 +7,6 @@ public interface IDao <T>{
     T buscarPorId(Integer id);
     List<T> listaTodos();
     void modificar(T t);
-
-
+    void borrar(Integer id);
 
 }

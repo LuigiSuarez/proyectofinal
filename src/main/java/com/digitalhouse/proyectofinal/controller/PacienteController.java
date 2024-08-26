@@ -30,4 +30,10 @@ public class PacienteController {
         pacienteService.modificarPaciente(paciente);
         return "el paciente "+ paciente.getId() + " fue modificado";
     }
+
+    @DeleteMapping("/borrar/{id}")
+    public String borrarPaciente(@PathVariable Integer id){
+        pacienteService.borrarPaciente(id);
+        return "Paciente con ID " + id + " fue eliminado exitosamente.";
+    }
 }
