@@ -1,9 +1,9 @@
-package com.digitalhouse.proyectofinal;
+package com.digitalhouse.proyectofinal.service;
 
 import com.digitalhouse.proyectofinal.dao.impl.DaoH2Paciente;
+import com.digitalhouse.proyectofinal.db.H2Connection;
 import com.digitalhouse.proyectofinal.model.Domicilio;
 import com.digitalhouse.proyectofinal.model.Paciente;
-import com.digitalhouse.proyectofinal.service.PacienteService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 class PacienteServiceTest {
@@ -26,20 +25,7 @@ class PacienteServiceTest {
     PacienteService pacienteService = new PacienteService(new DaoH2Paciente());
     @BeforeAll
     static void crearTablas(){
-        Connection connection = null;
-        try {
-            Class.forName("org.h2.Driver");
-            connection = DriverManager.getConnection("jdbc:h2:./maven;INIT=RUNSCRIPT FROM 'create.sql'", "sa", "sa");
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                logger.error(e.getMessage());
-            }
-        }
+        H2Connection.crearTablas();
     }
     @Test
     @DisplayName("Testear que un paciente fue cargado correctamente con su domicilio")
