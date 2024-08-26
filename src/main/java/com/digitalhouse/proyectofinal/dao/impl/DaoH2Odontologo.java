@@ -16,9 +16,8 @@ public class DaoH2Odontologo implements IDao<OdontologoModel> {
     public static final Logger logger = LoggerFactory.getLogger(DaoH2Odontologo.class);
     public static final String INSERT = "INSERT INTO ODONTOLOGOS VALUES(DEFAULT,?,?,? )";
     public static final String SELECT_ALL = "SELECT * FROM ODONTOLOGOS";
-    public static final String UPDATE = "UPDATE ODONTOLOGO SET MATRICULA=?,NOMBRE=?,APELLIDO=? WHERE ID=?";
-
-    public static final String DELETE =" DELETE FROM ODONTOLOGOS WHERE ID=?";
+    public static final String SELECT_ID = "SELECT * FROM ODONTOLOGOS WHERE ID = ?";
+    public static final String UPDATE = "UPDATE ODONTOLOGOS SET APELLIDO=?, NOMBRE=?, IDMATRICULA=? WHERE ID=?";
 
 
     @Override
@@ -72,7 +71,39 @@ public class DaoH2Odontologo implements IDao<OdontologoModel> {
 
     @Override
     public OdontologoModel buscarPorId(Integer id) {
-        return null;
+        Connection connection = null;
+        OdontologoModel odontologoEncontrado = null;
+        try{
+            connection = H2Connection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ID);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                Integer idDB = resultSet.getInt(1);
+                Integer idMatricula = resultSet.getInt(2);
+                String apellido = resultSet.getString(3);
+                String nombre = resultSet.getString(4);
+
+                odontologoEncontrado = new OdontologoModel(idDB, idMatricula, nombre,apellido );
+            }
+            if(odontologoEncontrado!= null){
+                logger.info("Odontologo encontrado "+ odontologoEncontrado);
+            } else {
+                logger.info("Odontologo no encontrado");
+            }
+
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        return odontologoEncontrado;
     }
 
     @Override
@@ -128,19 +159,21 @@ public class DaoH2Odontologo implements IDao<OdontologoModel> {
     }
 
     @Override
-    public void modificar(OdontologoModel odontologoModel) {
+    public void modificar(OdontologoModel odontologo) {
         Connection connection = null;
         try{
             connection = H2Connection.getConnection();
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE);
-            preparedStatement.setString(1,odontologoModel.getNombre());
-            preparedStatement.setString(2, odontologoModel.getApellido());
-            preparedStatement.setInt(3, odontologoModel.getNoMatricula());
-            preparedStatement.setInt(4, odontologoModel.getId());
+
+            preparedStatement.setString(1, odontologo.getApellido());
+            preparedStatement.setString(2, odontologo.getNombre());
+            preparedStatement.setInt(3, odontologo.getNoMatricula());
+            preparedStatement.setInt(4, odontologo.getId());
+
             preparedStatement.executeUpdate();
             connection.commit();
-            logger.info("Odontologo Modificado"+ odontologoModel);
+            logger.info("Odontologo modificado"+ odontologo);
 
         }catch (Exception e){
             if(connection != null){
@@ -169,45 +202,9 @@ public class DaoH2Odontologo implements IDao<OdontologoModel> {
     }
 
     @Override
-    public void eliminar(Integer id) {
-        Connection      connection = null;
-        OdontologoModel odontologo = null;
-        try {
-            connection = H2Connection.getConnection();
-            connection.setAutoCommit(false);
-            odontologo = buscarPorId(id);
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE);
-            preparedStatement.setInt(1, id);
-            preparedStatement.executeUpdate();
-            connection.commit();
-            logger.info("Paciente eliminado con Exito" + id);
+    public void borrar(Integer id) {
 
-        } catch (Exception e) {
-            if(connection != null){
-                try{
-                   connection.rollback();
-                }catch(SQLException ex){
-                    logger.error(e.getMessage());
-                }finally {
-                    try{
-                       connection.setAutoCommit(true);
-                    }catch(SQLException ex){
-                        throw new RuntimeException();
-                    }
-                }
-            }
-            logger.error(e.getMessage());
-            e.printStackTrace();
-        }finally {
-            try{
-               connection.close();
-            }catch(SQLException ex){
-                logger.error(ex.getMessage());
-                ex.printStackTrace();
-            }
-        }
-
-        }
+    }
 
 
 }

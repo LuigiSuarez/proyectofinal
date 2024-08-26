@@ -19,6 +19,7 @@ public class DaoH2Domicilio implements IDao<Domicilio> {
     public static final String SELECT_ID = "SELECT * FROM DOMICILIOS WHERE ID =?";
     public static final String UPDATE = "UPDATE DOMICILIOS SET CALLE=?, NUMERO=?, LOCALIDAD=?," +
             "PROVINCIA=? WHERE ID=?";
+    public static final String DELETE_BY_ID = "DELETE FROM PACIENTES WHERE ID = ?";
     @Override
     public Domicilio guardar(Domicilio domicilio) {
         Connection connection = null;
@@ -150,7 +151,41 @@ public class DaoH2Domicilio implements IDao<Domicilio> {
     }
 
     @Override
-    public void eliminar(Integer id) {
+    public void borrar(Integer id) {
 
+        Connection connection = null;
+        try{
+            connection = H2Connection.getConnection();
+            connection.setAutoCommit(false);
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID);
+            preparedStatement.setInt(1,id);
+            preparedStatement.executeUpdate();
+            connection.commit();
+            logger.info("El domicilio del paciente con el id "+id+" fue eliminado" );
+
+        }catch (Exception e){
+            if(connection != null){
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    logger.error(e.getMessage());
+                } finally {
+                    try {
+                        connection.setAutoCommit(true);
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            }
+            logger.error(e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                e.printStackTrace();
+            }
+        }
     }
 }

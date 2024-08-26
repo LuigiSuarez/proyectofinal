@@ -27,4 +27,6 @@ public class PacienteService {
     public void modificarPaciente(Paciente paciente){
         pacienteIDao.modificar(paciente);
     }
+
+    public void borrarPaciente(Integer id){pacienteIDao.borrar(id);}
 }

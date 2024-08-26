@@ -2,8 +2,9 @@ package com.digitalhouse.proyectofinal.dao.impl;
 
 import com.digitalhouse.proyectofinal.dao.IDao;
 import com.digitalhouse.proyectofinal.model.Paciente;
-import com.digitalhouse.proyectofinal.db.H2Connection;
 import com.digitalhouse.proyectofinal.model.Domicilio;
+import com.digitalhouse.proyectofinal.db.H2Connection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ public class DaoH2Paciente implements IDao<Paciente> {
     public static final String INSERT = "INSERT INTO PACIENTES VALUES(DEFAULT,?,?,?,?,? )";
     public static final String SELECT_ID = "SELECT * FROM PACIENTES WHERE ID = ?";
     public static final String SELECT_ALL = "SELECT * FROM PACIENTES";
+    public static final String DELETE_BY_ID = "DELETE FROM PACIENTES WHERE ID = ?";
 
     public static final String UPDATE = "UPDATE PACIENTES SET APELLIDO=?, NOMBRE=?, DNI=?," +
             "FECHA_INGRESO=?, ID_DOMICILIO=? WHERE ID=?";
@@ -198,7 +200,34 @@ public class DaoH2Paciente implements IDao<Paciente> {
     }
 
     @Override
-    public void eliminar(Integer id) {
+    public void borrar(Integer id) {
+        Connection connection = null;
+        Paciente paciente = null;
+        try {
+            connection = H2Connection.getConnection();
+            connection.setAutoCommit(false);
+
+            paciente = buscarPorId(id);
+            daoH2Domicilio.borrar(paciente.getDomicilio().getId());
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID);
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+            connection.commit();
+            logger.info("Paciente con ID " + id + " eliminado exitosamente.");
+
+        } catch (Exception e) {
+            logger.error("Error al intentar eliminar el paciente con ID " + id, e);
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                e.printStackTrace();
+            }
+        }
 
     }
+
+
 }
