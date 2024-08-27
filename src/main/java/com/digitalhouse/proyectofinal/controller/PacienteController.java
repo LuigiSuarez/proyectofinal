@@ -1,6 +1,6 @@
 package com.digitalhouse.proyectofinal.controller;
 
-import com.digitalhouse.proyectofinal.model.Paciente;
+import com.digitalhouse.proyectofinal.entity.Paciente;
 import com.digitalhouse.proyectofinal.service.PacienteService;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,7 +1,6 @@
 package com.digitalhouse.proyectofinal.controller;
 
-import com.digitalhouse.proyectofinal.model.OdontologoModel;
-import com.digitalhouse.proyectofinal.model.Paciente;
+import com.digitalhouse.proyectofinal.entity.Odontologo;
 import com.digitalhouse.proyectofinal.service.OdontologoService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,15 +16,15 @@ public class OdontologoController {
     }
 
     @PostMapping("/guardar")
-    public OdontologoModel guardarOdontologo(@RequestBody OdontologoModel odontologo){
+    public Odontologo guardarOdontologo(@RequestBody Odontologo odontologo){
         return odontologoService.guardar(odontologo);
     }
     @GetMapping("/buscartodos")
-    public List<OdontologoModel> listarTodos(){
+    public List<Odontologo> listarTodos(){
         return odontologoService.listar();
     }
     @PutMapping("/modificar")
-    public String modificarOdontologo(@RequestBody OdontologoModel odontologo){
+    public String modificarOdontologo(@RequestBody Odontologo odontologo){
         odontologoService.modificarOdontologo(odontologo);
         return "El odontologo "+ odontologo.getId() + " fue modificado exitosamente";
     }

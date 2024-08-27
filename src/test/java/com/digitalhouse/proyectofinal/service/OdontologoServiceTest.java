@@ -1,7 +1,7 @@
 package com.digitalhouse.proyectofinal.service;
 
 import com.digitalhouse.proyectofinal.dao.impl.DaoH2Odontologo;
-import com.digitalhouse.proyectofinal.model.OdontologoModel;
+import com.digitalhouse.proyectofinal.entity.Odontologo;
 import com.digitalhouse.proyectofinal.db.H2Connection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,16 +27,16 @@ public class OdontologoServiceTest {
     @DisplayName("Testear guardar y obtener la lista de odontologos")
     void testGuardarYListarOdontologos(){
 
-        OdontologoModel odontologo = new OdontologoModel(300,"Lina", "Suarez");
-        OdontologoModel odontologo2 = new OdontologoModel(301,"Juan", "Suarez");
-        OdontologoModel odontologo3 = new OdontologoModel(302,"Luis", "Suarez");
+        Odontologo odontologo = new Odontologo(300,"Lina", "Suarez");
+        Odontologo odontologo2 = new Odontologo(301,"Juan", "Suarez");
+        Odontologo odontologo3 = new Odontologo(302,"Luis", "Suarez");
 
         odontologoService.guardar(odontologo);
         odontologoService.guardar(odontologo2);
         odontologoService.guardar(odontologo3);
 
 
-        List<OdontologoModel> odontologos = odontologoService.listar();
+        List<Odontologo> odontologos = odontologoService.listar();
 
         assertEquals(3, odontologos.size());
 
@@ -45,25 +45,25 @@ public class OdontologoServiceTest {
     @Test
     @DisplayName("Testear que un odontologo pueda acceder por id")
     void testAccederPorId(){
-        OdontologoModel odontologo = new OdontologoModel(1,300,"Lina", "Suarez");
+        Odontologo odontologo = new Odontologo(1,300,"Lina", "Suarez");
         odontologoService.guardar(odontologo);
 
-        OdontologoModel odontologoDesdeDb = odontologoService.buscarPorId(1);
+        Odontologo odontologoDesdeDb = odontologoService.buscarPorId(1);
         assertEquals(1, odontologoDesdeDb.getId());
     }
 
     @Test
     @DisplayName("Testear modificar un odontologo")
     void testModificarOdontologo() {
-        OdontologoModel odontologoOriginal = new OdontologoModel(1,300, "Lina", "Suarez");
+        Odontologo odontologoOriginal = new Odontologo(1,300, "Lina", "Suarez");
         odontologoService.guardar(odontologoOriginal);
 
-        OdontologoModel odontologoModificado = new OdontologoModel(1,300, "Lina", "Gomez");
+        Odontologo odontologoModificado = new Odontologo(1,300, "Lina", "Gomez");
         odontologoService.modificarOdontologo(odontologoModificado);
 
-        List<OdontologoModel> odontologos = odontologoService.listar();
+        List<Odontologo> odontologos = odontologoService.listar();
 
-        OdontologoModel odontologoEncontrado = odontologos.stream()
+        Odontologo odontologoEncontrado = odontologos.stream()
                 .filter(o -> o.getId() == odontologoModificado.getId())
                 .findFirst()
                 .orElse(null);

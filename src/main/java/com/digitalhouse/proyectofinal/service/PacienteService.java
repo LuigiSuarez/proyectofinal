@@ -1,6 +1,6 @@
 package com.digitalhouse.proyectofinal.service;
 
-import com.digitalhouse.proyectofinal.model.Paciente;
+import com.digitalhouse.proyectofinal.entity.Paciente;
 import com.digitalhouse.proyectofinal.dao.IDao;
 import org.springframework.stereotype.Service;
 

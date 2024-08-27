@@ -2,8 +2,8 @@ package com.digitalhouse.proyectofinal.service;
 
 import com.digitalhouse.proyectofinal.dao.impl.DaoH2Paciente;
 import com.digitalhouse.proyectofinal.db.H2Connection;
-import com.digitalhouse.proyectofinal.model.Domicilio;
-import com.digitalhouse.proyectofinal.model.Paciente;
+import com.digitalhouse.proyectofinal.entity.Domicilio;
+import com.digitalhouse.proyectofinal.entity.Paciente;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,9 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 

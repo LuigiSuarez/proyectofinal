@@ -2,28 +2,28 @@ package com.digitalhouse.proyectofinal.service;
 
 
 import com.digitalhouse.proyectofinal.dao.IDao;
-import com.digitalhouse.proyectofinal.model.OdontologoModel;
+import com.digitalhouse.proyectofinal.entity.Odontologo;
 
 import java.util.List;
 
 public class OdontologoService {
-    private IDao<OdontologoModel> OdontologoIDao;
+    private IDao<Odontologo> OdontologoIDao;
 
-    public OdontologoService(IDao<OdontologoModel> odontologoIDao) {
+    public OdontologoService(IDao<Odontologo> odontologoIDao) {
         this.OdontologoIDao=odontologoIDao;
     }
 
-    public OdontologoModel guardar(OdontologoModel odontologo){
+    public Odontologo guardar(Odontologo odontologo){
         return OdontologoIDao.guardar(odontologo);
     }
-    public OdontologoModel buscarPorId(Integer id){
+    public Odontologo buscarPorId(Integer id){
         return OdontologoIDao.buscarPorId(id);
     }
-    public List<OdontologoModel> listar(){
+    public List<Odontologo> listar(){
         return OdontologoIDao.listaTodos();
     }
 
-    public void modificarOdontologo(OdontologoModel odontologo){OdontologoIDao.modificar(odontologo);
+    public void modificarOdontologo(Odontologo odontologo){OdontologoIDao.modificar(odontologo);
     }
 
 }
