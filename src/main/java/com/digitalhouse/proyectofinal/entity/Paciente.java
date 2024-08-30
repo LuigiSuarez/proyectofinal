@@ -22,6 +22,7 @@ public class Paciente {
     private String nombre;
     private String dni;
     private LocalDate fechaIngreso;
+    @ManyToOne
     private Domicilio domicilio;
 
     @Override
