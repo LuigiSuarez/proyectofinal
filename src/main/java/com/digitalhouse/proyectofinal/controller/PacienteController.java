@@ -25,7 +25,7 @@ public class PacienteController {
     }
 
     //PUT
-    /*@PutMapping("/modificar")
+    @PutMapping("/modificar")
     public ResponseEntity<String>  modificarPaciente(@RequestBody Paciente paciente){
         Optional<Paciente> pacienteEncontrado = pacienteService.buscarPorId(paciente.getId());
         if(pacienteEncontrado.isPresent()){
@@ -35,7 +35,7 @@ public class PacienteController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-    }*/
+    }
 
 
     //DELETE
