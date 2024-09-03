@@ -1,5 +1,7 @@
 package com.digitalhouse.proyectofinal.service.impl;
 
+import com.digitalhouse.proyectofinal.dto.reponse.OdontologoResponseDto;
+import com.digitalhouse.proyectofinal.dto.reponse.PacienteResponseDto;
 import com.digitalhouse.proyectofinal.dto.reponse.TurnoResponseDto;
 import com.digitalhouse.proyectofinal.dto.request.TurnoRequestDto;
 import com.digitalhouse.proyectofinal.entity.Odontologo;
@@ -76,3 +78,6 @@ public class TurnoService implements ITurnoService {
         return turnoResponseDto;
     }
 }
+
+//https://docs.google.com/document/d/19wPYTApRSr_0n5S-f7xzUTRImTg7xCVS1mAtErL8KEk/edit#heading=h.x36oy5demzwb
+//https://docs.google.com/document/d/1GUaFZIdh2BYsbdQFKi5BWkL0JIFmYp-pUV3ZEC6xIMs/edit#heading=h.x36oy5demzwb
