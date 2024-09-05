@@ -1,4 +1,4 @@
-package com.digitalhouse.proyectofinal.dto.request;
+package com.digitalhouse.proyectofinal.dto.reponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OdontologoResponseDto {
+public class PacienteResponseDto {
     private Integer id;
-    private String matricula;
-    private String nombre;
     private String apellido;
-
+    private String nombre;
+    private String dni;
 }

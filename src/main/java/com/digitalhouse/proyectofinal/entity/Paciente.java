@@ -1,5 +1,7 @@
 package com.digitalhouse.proyectofinal.entity;
-
+//Era el model
+import com.digitalhouse.proyectofinal.utils.GsonProvider;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,11 +24,22 @@ public class Paciente {
     private String nombre;
     private String dni;
     private LocalDate fechaIngreso;
-    @ManyToOne
+
+    //@ManyToOne
+    //private Domicilio domicilio;
+
+    @OneToOne(cascade  = CascadeType.ALL)
     private Domicilio domicilio;
+
+    @OneToMany(mappedBy = "paciente", cascade = CascadeType.REMOVE)
+    @JsonManagedReference(value = "paciente-turno")
+
+    //private Set<Turno> turnoSet;
 
     @Override
     public String toString() {
+        return GsonProvider.getGson().toJson(this);
+        /*
         return "Paciente{" +
                 "id=" + id +
                 ", apellido='" + apellido + '\'' +
@@ -35,5 +48,6 @@ public class Paciente {
                 ", fechaIngreso=" + fechaIngreso +
                 ", domicilio=" + domicilio +
                 '}';
+                */
     }
 }
