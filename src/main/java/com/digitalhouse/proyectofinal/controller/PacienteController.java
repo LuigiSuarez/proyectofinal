@@ -1,5 +1,6 @@
 package com.digitalhouse.proyectofinal.controller;
 
+import com.digitalhouse.proyectofinal.dto.request.PacienteRequestDto;
 import com.digitalhouse.proyectofinal.entity.Paciente;
 import com.digitalhouse.proyectofinal.service.IPacienteService;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class PacienteController {
 
     //POST
     @PostMapping("/guardar")
-    public ResponseEntity<Paciente> guardarPaciente(@RequestBody Paciente paciente){
+    public ResponseEntity<Paciente> guardarPaciente(@RequestBody PacienteRequestDto paciente){
         return ResponseEntity.ok(pacienteService.guardarPaciente(paciente));
     }
 

@@ -1,8 +1,11 @@
 package com.digitalhouse.proyectofinal.service.impl;
 
+import com.digitalhouse.proyectofinal.dto.request.PacienteRequestDto;
+import com.digitalhouse.proyectofinal.entity.Domicilio;
 import com.digitalhouse.proyectofinal.entity.Paciente;
 import com.digitalhouse.proyectofinal.exception.BadRequestException;
 import com.digitalhouse.proyectofinal.exception.ResourceNotFoundException;
+import com.digitalhouse.proyectofinal.repository.IDomicilioRepository;
 import com.digitalhouse.proyectofinal.repository.IPacienteRepository;
 import com.digitalhouse.proyectofinal.service.IPacienteService;
 import org.slf4j.Logger;
@@ -18,18 +21,22 @@ import java.util.Optional;
 public class PacienteService implements IPacienteService {
     private static final Logger logger = LoggerFactory.getLogger(PacienteService.class);
     private IPacienteRepository pacienteRepository;
+    private IDomicilioRepository domicilioRepository;
 
-    public PacienteService(IPacienteRepository pacienteRepository) {
+    public PacienteService(IPacienteRepository pacienteRepository, IDomicilioRepository domicilioRepository) {
         this.pacienteRepository = pacienteRepository;
+        this.domicilioRepository = domicilioRepository;
     }
 
     @Override
-    public Paciente guardarPaciente(Paciente paciente) {
-        logger.info("Intentando guardar un paciente: {}",paciente);
-        if(paciente == null || paciente.getNombre() == null || paciente.getApellido() ==null){
+    public Paciente guardarPaciente(PacienteRequestDto pacienteRequestDto) {
+        logger.info("Intentando guardar un paciente: {}",pacienteRequestDto);
+        if(pacienteRequestDto == null || pacienteRequestDto.getNombre() == null || pacienteRequestDto.getApellido() ==null){
             logger.error("Error al guardar el paciente: datos inválidos.");
             throw new BadRequestException("El paciente no puede ser nulo y debe tener un nombre y apellido.");
         }
+
+        Paciente paciente = convertirDtoEnPaciente(pacienteRequestDto);
         Paciente savedPaciente = pacienteRepository.save(paciente);
         logger.info("Paciente guardado con éxito: {}", savedPaciente);
         return savedPaciente;
@@ -116,6 +123,20 @@ public class PacienteService implements IPacienteService {
         logger.info("Número de pacientes en la provincia {}: {}", provincia, count);
 
         return count;
+    }
+
+    private Paciente convertirDtoEnPaciente(PacienteRequestDto pacienteRequestDto) {
+        Paciente paciente = new Paciente();
+        paciente.setApellido(pacienteRequestDto.getApellido());
+        paciente.setNombre(pacienteRequestDto.getNombre());
+        paciente.setDni(pacienteRequestDto.getDni());
+        paciente.setFechaIngreso(pacienteRequestDto.getFechaIngreso());
+
+        if (pacienteRequestDto.getDomicilioId() != null) {
+            Optional<Domicilio> domicilio = domicilioRepository.findById(pacienteRequestDto.getDomicilioId());
+            domicilio.ifPresent(paciente::setDomicilio);
+        }
+        return paciente;
     }
 
 }

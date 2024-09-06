@@ -1,5 +1,6 @@
 package com.digitalhouse.proyectofinal.service;
 
+import com.digitalhouse.proyectofinal.dto.request.PacienteRequestDto;
 import com.digitalhouse.proyectofinal.entity.Paciente;
 import org.springframework.cglib.core.Local;
 
@@ -7,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 public interface IPacienteService {
-    Paciente guardarPaciente(Paciente paciente);
+    Paciente guardarPaciente(PacienteRequestDto paciente);
 
     Optional<Paciente> buscarPorId(Integer id);
     List<Paciente> buscarTodos();
