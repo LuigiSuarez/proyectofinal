@@ -115,6 +115,7 @@ public class TurnoService implements ITurnoService {
         TurnoResponseDto turnoResponseDto = modelMapper.map(turno, TurnoResponseDto.class);
         turnoResponseDto.setPacienteResponseDto(modelMapper.map(turno.getPaciente(), PacienteResponseDto.class));
         turnoResponseDto.setOdontologoResponseDto(modelMapper.map(turno.getOdontologo(), OdontologoResponseDto.class));
+        logger.info("TurnoResponseDto generado: {}", turnoResponseDto);
         return turnoResponseDto;
     }
 }

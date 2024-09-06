@@ -1,7 +1,7 @@
 package com.digitalhouse.proyectofinal.service;
 
 import com.digitalhouse.proyectofinal.entity.Odontologo;
-import com.digitalhouse.proyectofinal.db.H2Connection;
+//import com.digitalhouse.proyectofinal.db.H2Connection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
