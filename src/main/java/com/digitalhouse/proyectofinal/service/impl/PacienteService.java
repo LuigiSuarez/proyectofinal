@@ -10,7 +10,7 @@ import com.digitalhouse.proyectofinal.repository.IPacienteRepository;
 import com.digitalhouse.proyectofinal.service.IPacienteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cglib.core.Local;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,6 +23,7 @@ public class PacienteService implements IPacienteService {
     private IPacienteRepository pacienteRepository;
     private IDomicilioRepository domicilioRepository;
 
+    @Autowired
     public PacienteService(IPacienteRepository pacienteRepository, IDomicilioRepository domicilioRepository) {
         this.pacienteRepository = pacienteRepository;
         this.domicilioRepository = domicilioRepository;
