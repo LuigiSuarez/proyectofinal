@@ -7,8 +7,10 @@ import com.digitalhouse.proyectofinal.repository.IPacienteRepository;
 import com.digitalhouse.proyectofinal.service.IPacienteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,4 +93,29 @@ public class PacienteService implements IPacienteService {
         logger.info("Número de pacientes encontrados: {}", pacientes.size());
         return pacientes;
     }
+
+    @Override
+    public List<Paciente> buscarPacientesConFechaIngresoPosteriorA(LocalDate fecha) {
+        logger.info("Buscando pacientes con fecha de ingreso posterior a: {}", fecha);
+        List<Paciente> pacientes = pacienteRepository.buscarPacientesConFechaIngresoPosteriorA(fecha);
+        logger.info("Número de pacientes encontrados: {}", pacientes.size());
+
+        return pacientes;
+    }
+    @Override
+    public long contarPacientesPorRangoFechas(LocalDate fechaInicio, LocalDate fechaFin) {
+        logger.info("Contando pacientes ingresados entre {} y {}", fechaInicio, fechaFin);
+        long count = pacienteRepository.contarPacientesPorRangoFechas(fechaInicio, fechaFin);
+        logger.info("Número de pacientes ingresados en el rango de fechas: {}", count);
+        return count;
+    }
+
+    @Override
+    public long contarPacientesPorProvincia(String provincia) {
+        long count = pacienteRepository.contarPacientesPorProvincia(provincia);
+        logger.info("Número de pacientes en la provincia {}: {}", provincia, count);
+
+        return count;
+    }
+
 }
