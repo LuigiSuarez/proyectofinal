@@ -1,17 +1,21 @@
 package com.digitalhouse.proyectofinal.service;
 
+import com.digitalhouse.proyectofinal.dto.reponse.OdontologoResponseDto;
+import com.digitalhouse.proyectofinal.dto.request.OdontologoModifyDto;
+import com.digitalhouse.proyectofinal.dto.request.OdontologoRequestDto;
 import com.digitalhouse.proyectofinal.entity.Odontologo;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 
 public interface IOdontologoService {
 
-    Odontologo guardarOdontologo(Odontologo odontologo);
-    Optional<Odontologo> buscarPorId(Integer id);
+    OdontologoResponseDto guardarOdontologo(OdontologoRequestDto odontologoRequestDto);
+    Optional<OdontologoResponseDto> buscarPorId(Integer id);
 
-    List<Odontologo> buscarTodos();
-    void modificarOdontologo(Odontologo odontologo);
+    List<OdontologoResponseDto> buscarTodos();
+    void modificarOdontologo(OdontologoModifyDto odontologoModifyDto);
     void eliminarOdontologo(Integer id);
 
 
