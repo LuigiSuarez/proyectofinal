@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TurnoService implements ITurnoService {
@@ -137,6 +138,24 @@ public class TurnoService implements ITurnoService {
             logger.warn("No se encontraron turnos para el paciente con apellido: {}", pacienteApellido);
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<TurnoResponseDto> buscarTurnosPorRangoDeFechas(LocalDate fechaInicio, LocalDate fechaFin) {
+        Optional<Turno> turnos = turnoRepository.buscarTurnosPorRangoDeFechas(fechaInicio, fechaFin);
+        List<TurnoResponseDto> turnosRespuesta = turnos.stream()
+                .map(this::convertirTurnoEnResponse)
+                .collect(Collectors.toList());
+        return turnosRespuesta;
+    }
+
+    @Override
+    public Optional<TurnoResponseDto> buscarTurnosPorApellidoOdontologo(String odontologoApellido) {
+        logger.info("Buscando turnos para el odontologo con apellido: {}", odontologoApellido);
+        Optional<Turno> turnos = turnoRepository.buscarTurnosPorApellidoOdontologo(odontologoApellido);
+
+        TurnoResponseDto turnosRespuesta =convertirTurnoEnResponse(turnos.get());
+        return Optional.of(turnosRespuesta);
     }
 
     private TurnoResponseDto convertirTurnoEnResponse(Turno turno){
