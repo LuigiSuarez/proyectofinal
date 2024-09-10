@@ -43,7 +43,7 @@ public class OdontologoService implements IOdontologoService {
     }
 
     @Override
-    public Optional<Odontologo> buscarPorId(Integer id) {
+    public Optional<OdontologoResponseDto> buscarPorId(Integer id) {
         Optional<Odontologo> odontologo = odontologoRepository.findById(id);
         if(odontologo.isPresent()){
             OdontologoResponseDto odontologoRespuesta =  convertirOdontologoEnResponse(odontologo.get());
