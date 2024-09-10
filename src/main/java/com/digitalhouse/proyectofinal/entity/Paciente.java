@@ -39,15 +39,5 @@ public class Paciente {
     @Override
     public String toString() {
         return GsonProvider.getGson().toJson(this);
-        /*
-        return "Paciente{" +
-                "id=" + id +
-                ", apellido='" + apellido + '\'' +
-                ", nombre='" + nombre + '\'' +
-                ", dni='" + dni + '\'' +
-                ", fechaIngreso=" + fechaIngreso +
-                ", domicilio=" + domicilio +
-                '}';
-                */
     }
 }

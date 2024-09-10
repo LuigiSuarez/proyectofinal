@@ -1,13 +1,9 @@
 package com.digitalhouse.proyectofinal.service.impl;
 
 import com.digitalhouse.proyectofinal.dto.reponse.OdontologoResponseDto;
-import com.digitalhouse.proyectofinal.dto.reponse.TurnoModifyDto;
-import com.digitalhouse.proyectofinal.dto.reponse.TurnoResponseDto;
 import com.digitalhouse.proyectofinal.dto.request.OdontologoModifyDto;
 import com.digitalhouse.proyectofinal.dto.request.OdontologoRequestDto;
 import com.digitalhouse.proyectofinal.entity.Odontologo;
-import com.digitalhouse.proyectofinal.entity.Paciente;
-import com.digitalhouse.proyectofinal.entity.Turno;
 import com.digitalhouse.proyectofinal.exception.BadRequestException;
 import com.digitalhouse.proyectofinal.exception.ResourceNotFoundException;
 import com.digitalhouse.proyectofinal.repository.IOdontologoRepository;
@@ -47,7 +43,7 @@ public class OdontologoService implements IOdontologoService {
     }
 
     @Override
-    public Optional<OdontologoResponseDto> buscarPorId(Integer id) {
+    public Optional<Odontologo> buscarPorId(Integer id) {
         Optional<Odontologo> odontologo = odontologoRepository.findById(id);
         if(odontologo.isPresent()){
             OdontologoResponseDto odontologoRespuesta =  convertirOdontologoEnResponse(odontologo.get());
