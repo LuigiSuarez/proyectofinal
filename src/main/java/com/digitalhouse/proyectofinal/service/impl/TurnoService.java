@@ -28,17 +28,17 @@ import java.util.stream.Collectors;
 @Service
 public class TurnoService implements ITurnoService {
     private final Logger logger = LoggerFactory.getLogger(TurnoService.class);
-    private ITurnoService turnoService;
     private ITurnoRepository turnoRepository;
     private IPacienteService pacienteService;
     private IOdontologoService odontologoService;
     @Autowired
     private ModelMapper modelMapper;
 
-    public TurnoService(ITurnoService turnoService, IPacienteService pacienteService, IOdontologoService odontologoService) {
-        this.turnoService = turnoService;
+    public TurnoService(ITurnoRepository turnoRepository, IPacienteService pacienteService, IOdontologoService odontologoService, ModelMapper modelMapper) {
+        this.turnoRepository= turnoRepository;
         this.pacienteService = pacienteService;
         this.odontologoService = odontologoService;
+        this.modelMapper = modelMapper;
     }
     @Override
     public TurnoResponseDto guardarTurno(TurnoRequestDto turnoRequestDto) {
