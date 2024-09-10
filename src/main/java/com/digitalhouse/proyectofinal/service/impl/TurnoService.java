@@ -23,59 +23,70 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TurnoService implements ITurnoService {
     private final Logger logger = LoggerFactory.getLogger(TurnoService.class);
-    private ITurnoService turnoService;
     private ITurnoRepository turnoRepository;
     private IPacienteService pacienteService;
     private IOdontologoService odontologoService;
     @Autowired
     private ModelMapper modelMapper;
 
-    public TurnoService(ITurnoService turnoService, IPacienteService pacienteService, IOdontologoService odontologoService) {
-        this.turnoService = turnoService;
+    public TurnoService(ITurnoRepository turnoRepository, IPacienteService pacienteService, IOdontologoService odontologoService, ModelMapper modelMapper) {
+        this.turnoRepository= turnoRepository;
         this.pacienteService = pacienteService;
         this.odontologoService = odontologoService;
+        this.modelMapper = modelMapper;
     }
     @Override
     public TurnoResponseDto guardarTurno(TurnoRequestDto turnoRequestDto) {
+
+        logger.info("Request de turno: {}", turnoRequestDto);
+
         Optional<Paciente>paciente=pacienteService.buscarPorId(turnoRequestDto.getPaciente_id());
         Optional<Odontologo>odontologo=odontologoService.buscarPorId(turnoRequestDto.getOdontologo_id());
-        Turno turno = new Turno();
-        Turno turnoDesdeDB = null;
-        TurnoResponseDto turnoResponseDto = null;
-        if (paciente.isPresent() && odontologo.isPresent()){
-            turno.setPaciente(paciente.get());
-            turno.setOdontologo(odontologo.get());
-            turno.setFecha(LocalDate.parse(turnoRequestDto.getFecha()));
 
-            turnoDesdeDB = turnoRepository.save(turno);
-
-            turnoResponseDto = convertirTurnoEnResponse(turnoDesdeDB);
+        if (paciente.isEmpty() || odontologo.isEmpty()) {
+            logger.error("Error al guardar turno: Paciente u Odontólogo no encontrados");
+            throw new ResourceNotFoundException("Paciente u Odontólogo no encontrados");
         }
+
+        Turno turno = new Turno();
+        turno.setPaciente(paciente.get());
+        turno.setOdontologo(odontologo.get());
+        turno.setFecha(LocalDate.parse(turnoRequestDto.getFecha()));
+
+        Turno turnoDesdeDB = turnoRepository.save(turno);
+        TurnoResponseDto turnoResponseDto = convertirTurnoEnResponse(turnoDesdeDB);
+
+        logger.info("Turno guardado con éxito:Response: {}", turnoResponseDto);
+
         return turnoResponseDto;
     }
 
     @Override
     public Optional<TurnoResponseDto> buscarPorId(Integer id) {
+        logger.info("Buscando turno con ID: {}", id);
         Optional<Turno> turno = turnoRepository.findById(id);
         if(turno.isPresent()){
             TurnoResponseDto turnoRespuesta = convertirTurnoEnResponse(turno.get());
             return Optional.of(turnoRespuesta);
         } else {
+            logger.error("Turno con ID {} no encontrado", id);
             throw new ResourceNotFoundException("El turno no fue encontrado");
         }
     }
 
     @Override
     public List<TurnoResponseDto> buscarTodos() {
+        logger.info("Buscando todos los turnos");
         List<Turno> turnosDesdeBD = turnoRepository.findAll();
         List<TurnoResponseDto> turnosRespuesta = new ArrayList<>();
         for(Turno t: turnosDesdeBD){
             TurnoResponseDto turnoRespuesta =convertirTurnoEnResponse(t);
-            logger.info("Turno "+ turnoRespuesta);
+            logger.info("Turno encontrado: {}", turnoRespuesta);
             turnosRespuesta.add(turnoRespuesta);
         }
         return turnosRespuesta;
@@ -83,32 +94,68 @@ public class TurnoService implements ITurnoService {
 
     @Override
     public void modificarTurno(TurnoModifyDto turnoModifyDto) {
+        logger.info("Modificando turno con datos: {}", turnoModifyDto);
+
         Optional<Paciente> paciente = pacienteService.buscarPorId(turnoModifyDto.getPaciente_id());
         Optional<Odontologo> odontologo = odontologoService.buscarPorId(turnoModifyDto.getOdontologo_id());
-        if(paciente.isPresent() && odontologo.isPresent()){
-            Turno turno = new Turno(
-                    turnoModifyDto.getId(),
-                    paciente.get(), odontologo.get(), LocalDate.parse(turnoModifyDto.getFecha())
-            );
-            turnoRepository.save(turno);
+
+        if (paciente.isEmpty() || odontologo.isEmpty()) {
+            logger.error("Error al modificar turno: Paciente u Odontólogo no encontrados");
+            throw new ResourceNotFoundException("Paciente u Odontólogo no encontrados");
         }
+
+        Turno turno = new Turno(turnoModifyDto.getId(), paciente.get(), odontologo.get(), LocalDate.parse(turnoModifyDto.getFecha()));
+        turnoRepository.save(turno);
+        logger.info("Turno modificado con éxito: {}", turno);
 
     }
 
     @Override
     public void eliminarTurno(Integer id) {
+        logger.info("Intentando eliminar turno con ID: {}", id);
+
         Optional<TurnoResponseDto> turnoEncontrado = buscarPorId(id);
+
+        if (turnoEncontrado.isEmpty()) {
+            logger.error("Turno con ID {} no encontrado para eliminar", id);
+            throw new ResourceNotFoundException("Turno con ID " + id + " no encontrado.");
+        }
+
         turnoRepository.deleteById(id);
+        logger.info("Turno eliminado con éxito: ID {}", id);
     }
 
     @Override
     public Optional<TurnoResponseDto> buscarTurnosPorPaciente(String pacienteApellido) {
+        logger.info("Buscando turnos para el paciente con apellido: {}", pacienteApellido);
+
         Optional<Turno> turno = turnoRepository.buscarPorApellidoPaciente(pacienteApellido);
-        TurnoResponseDto turnoParaResponder = null;
-        if(turno.isPresent()) {
-            turnoParaResponder = convertirTurnoEnResponse(turno.get());
+
+        if (turno.isPresent()) {
+            TurnoResponseDto turnoParaResponder = convertirTurnoEnResponse(turno.get());
+            return Optional.of(turnoParaResponder);
+        } else {
+            logger.warn("No se encontraron turnos para el paciente con apellido: {}", pacienteApellido);
+            return Optional.empty();
         }
-        return Optional.ofNullable(turnoParaResponder);
+    }
+
+    @Override
+    public List<TurnoResponseDto> buscarTurnosPorRangoDeFechas(LocalDate fechaInicio, LocalDate fechaFin) {
+        Optional<Turno> turnos = turnoRepository.buscarTurnosPorRangoDeFechas(fechaInicio, fechaFin);
+        List<TurnoResponseDto> turnosRespuesta = turnos.stream()
+                .map(this::convertirTurnoEnResponse)
+                .collect(Collectors.toList());
+        return turnosRespuesta;
+    }
+
+    @Override
+    public Optional<TurnoResponseDto> buscarTurnosPorApellidoOdontologo(String odontologoApellido) {
+        logger.info("Buscando turnos para el odontologo con apellido: {}", odontologoApellido);
+        Optional<Turno> turnos = turnoRepository.buscarTurnosPorApellidoOdontologo(odontologoApellido);
+
+        TurnoResponseDto turnosRespuesta =convertirTurnoEnResponse(turnos.get());
+        return Optional.of(turnosRespuesta);
     }
 
     private TurnoResponseDto convertirTurnoEnResponse(Turno turno){

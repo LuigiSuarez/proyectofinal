@@ -7,12 +7,11 @@ import com.digitalhouse.proyectofinal.entity.Odontologo;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 public interface IOdontologoService {
 
     OdontologoResponseDto guardarOdontologo(OdontologoRequestDto odontologoRequestDto);
-    Optional<OdontologoResponseDto> buscarPorId(Integer id);
+    Optional<Odontologo> buscarPorId(Integer id);
 
     List<OdontologoResponseDto> buscarTodos();
     void modificarOdontologo(OdontologoModifyDto odontologoModifyDto);

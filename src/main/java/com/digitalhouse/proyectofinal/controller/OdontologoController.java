@@ -34,8 +34,8 @@ public class OdontologoController {
     }
 
     @GetMapping("/buscar/{id}")
-    public ResponseEntity<OdontologoResponseDto> buscarOdontologoId(@PathVariable Integer id){
-        Optional<OdontologoResponseDto> odontologoEncontrado = odontologoService.buscarPorId(id);
+    public ResponseEntity<Odontologo> buscarOdontologoId(@PathVariable Integer id){
+        Optional<Odontologo> odontologoEncontrado = odontologoService.buscarPorId(id);
          return  ResponseEntity.ok(odontologoEncontrado.get());
     }
 
