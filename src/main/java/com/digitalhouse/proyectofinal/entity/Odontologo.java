@@ -16,17 +16,17 @@ public class Odontologo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private int NoMatricula;
-    private String Nombre;
-    private  String Apellido;
+    private int noMatricula;
+    private String nombre;
+    private  String apellido;
 
     @Override
     public String toString() {
         return "OdontologoModel{" +
                 "id=" + id +
-                ", NoMatricula=" + NoMatricula +
-                ", Nombre='" + Nombre + '\'' +
-                ", Apellido='" + Apellido + '\'' +
+                ", NoMatricula=" + noMatricula +
+                ", Nombre='" + nombre + '\'' +
+                ", Apellido='" + apellido + '\'' +
                 '}';
     }
 }

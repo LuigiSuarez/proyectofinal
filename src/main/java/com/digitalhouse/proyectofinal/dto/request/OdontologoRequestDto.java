@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OdontologoRequestDto {
-    private int NoMatricula;
-    private String Nombre;
-    private  String Apellido;
+    private int noMatricula;
+    private String nombre;
+    private  String apellido;
 }
