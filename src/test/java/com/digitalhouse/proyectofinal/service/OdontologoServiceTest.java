@@ -1,77 +1,110 @@
 package com.digitalhouse.proyectofinal.service;
 
+import com.digitalhouse.proyectofinal.dto.reponse.OdontologoResponseDto;
+import com.digitalhouse.proyectofinal.dto.request.OdontologoRequestDto;
 import com.digitalhouse.proyectofinal.entity.Odontologo;
-//import com.digitalhouse.proyectofinal.db.H2Connection;
-import org.junit.jupiter.api.DisplayName;
+import com.digitalhouse.proyectofinal.exception.BadRequestException;
+import com.digitalhouse.proyectofinal.exception.ResourceNotFoundException;
+import com.digitalhouse.proyectofinal.repository.IOdontologoRepository;
+import com.digitalhouse.proyectofinal.service.impl.OdontologoService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@SpringBootTest
 
 public class OdontologoServiceTest {
-    /*
-    static final Logger logger = LoggerFactory.getLogger(OdontologoServiceTest.class);
-    OdontologoService odontologoService = new OdontologoService(new DaoH2Odontologo());
+    @Mock
+    private IOdontologoRepository odontologoRepository;
 
-    @BeforeAll
-    static void crearTablas(){
-        H2Connection.crearTablas();
+    @InjectMocks
+    private OdontologoService odontologoService;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    @DisplayName("Testear guardar y obtener la lista de odontologos")
-    void testGuardarYListarOdontologos(){
+    void testGuardarOdontologoConDatosValidos() {
+        // Given
+        OdontologoRequestDto requestDto = new OdontologoRequestDto();
+        requestDto.setNombre("Juan");
+        requestDto.setApellido("Perez");
+        requestDto.setNoMatricula(123);
 
-        Odontologo odontologo = new Odontologo(300,"Lina", "Suarez");
-        Odontologo odontologo2 = new Odontologo(301,"Juan", "Suarez");
-        Odontologo odontologo3 = new Odontologo(302,"Luis", "Suarez");
+        Odontologo odontologo = new Odontologo();
+        odontologo.setNombre("Juan");
+        odontologo.setApellido("Perez");
+        odontologo.setNoMatricula(123);
 
-        odontologoService.guardar(odontologo);
-        odontologoService.guardar(odontologo2);
-        odontologoService.guardar(odontologo3);
+        when(odontologoRepository.save(any(Odontologo.class))).thenReturn(odontologo);
 
+        // When
+        OdontologoResponseDto responseDto = odontologoService.guardarOdontologo(requestDto);
 
-        List<Odontologo> odontologos = odontologoService.listar();
-
-        assertEquals(3, odontologos.size());
-
+        // Then
+        assertNotNull(responseDto);
+        assertEquals("Juan", responseDto.getNombre());
+        verify(odontologoRepository, times(1)).save(any(Odontologo.class));
     }
 
     @Test
-    @DisplayName("Testear que un odontologo pueda acceder por id")
-    void testAccederPorId(){
-        Odontologo odontologo = new Odontologo(1,300,"Lina", "Suarez");
-        odontologoService.guardar(odontologo);
+    void testGuardarOdontologoConDatosInvalidos() {
+        // Given
+        OdontologoRequestDto requestDto = new OdontologoRequestDto();
 
-        Odontologo odontologoDesdeDb = odontologoService.buscarPorId(1);
-        assertEquals(1, odontologoDesdeDb.getId());
+        // When / Then
+        assertThrows(BadRequestException.class, () -> odontologoService.guardarOdontologo(requestDto));
+        verify(odontologoRepository, never()).save(any(Odontologo.class));
     }
 
     @Test
-    @DisplayName("Testear modificar un odontologo")
-    void testModificarOdontologo() {
-        Odontologo odontologoOriginal = new Odontologo(1,300, "Lina", "Suarez");
-        odontologoService.guardar(odontologoOriginal);
+    void testBuscarPorIdExistente() {
+        // Given
+        Odontologo odontologo = new Odontologo();
+        odontologo.setId(1);
+        odontologo.setNombre("Ana");
 
-        Odontologo odontologoModificado = new Odontologo(1,300, "Lina", "Gomez");
-        odontologoService.modificarOdontologo(odontologoModificado);
+        when(odontologoRepository.findById(1)).thenReturn(Optional.of(odontologo));
 
-        List<Odontologo> odontologos = odontologoService.listar();
+        // When
+        Optional<Odontologo> result = odontologoService.buscarPorId(1);
 
-        Odontologo odontologoEncontrado = odontologos.stream()
-                .filter(o -> o.getId() == odontologoModificado.getId())
-                .findFirst()
-                .orElse(null);
-
-        assertNotNull(odontologoEncontrado, "Odontologo no encontrado");
-        assertEquals("Gomez", odontologoEncontrado.getApellido(), "El apellido no fue modificado correctamente");
-        assertEquals("Lina", odontologoEncontrado.getNombre(), "El nombre no debería haber cambiado");
-        assertEquals(300, odontologoEncontrado.getNoMatricula(), "El número de matrícula no debería haber cambiado");
+        // Then
+        assertTrue(result.isPresent());
+        assertEquals("Ana", result.get().getNombre());
+        verify(odontologoRepository, times(1)).findById(1);
     }
-     */
+
+    @Test
+    void testBuscarPorIdNoExistente() {
+        // Given
+        when(odontologoRepository.findById(1)).thenReturn(Optional.empty());
+
+        // When / Then
+        assertThrows(ResourceNotFoundException.class, () -> odontologoService.buscarPorId(1));
+        verify(odontologoRepository, times(1)).findById(1);
+    }
+
+    @Test
+    void testEliminarOdontologo() {
+        // Given
+        Integer id = 1;
+        doNothing().when(odontologoRepository).deleteById(id);
+
+        // When
+        odontologoService.eliminarOdontologo(id);
+
+        // Then
+        verify(odontologoRepository, times(1)).deleteById(id);
+    }
 }
