@@ -100,6 +100,7 @@ public class OdontologoService implements IOdontologoService {
         OdontologoResponseDto odontologoResponseDto = new OdontologoResponseDto();
         odontologoResponseDto.setId(odontologo.getId());
         odontologoResponseDto.setNombre(odontologo.getNombre());
+        odontologoResponseDto.setApellido(odontologo.getApellido());
         odontologoResponseDto.setMatricula(String.valueOf(odontologo.getNoMatricula()));
         return odontologoResponseDto;
     }
